@@ -1,7 +1,1 @@
-fastapi 
-uvicorn 
-python-dotenv 
-pydantic 
-sentence-transformers 
-qdrant-client 
-openai
+setuptools
