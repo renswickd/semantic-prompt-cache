@@ -1,1 +1,6 @@
 setuptools
+sentence-transformers
+torch
+langchain-community
+langchain-huggingface
+faiss-cpu
