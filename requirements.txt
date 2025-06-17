@@ -1,1 +1,3 @@
 setuptools
+sentence-transformers
+torch
