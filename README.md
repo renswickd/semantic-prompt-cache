@@ -22,11 +22,55 @@ This system introduces a semantic caching layer that intercepts incoming queries
 - **Latency-sensitive applications**  
   Reduce end-user wait time by short-circuiting the full RAG flow when a cached response is available.
 
-## 🔗 Project Direction
 
-This is currently a work-in-progress implementation. The project will be structured as a modular, functional codebase, designed to be easily integrated into larger LLM pipelines without requiring object-oriented complexity.
+# Semantic Cache for LLM-Enhanced RAG
+
+A modular, non-OOP semantic caching system built to reduce LLM calls and latency in Retrieval-Augmented Generation (RAG) pipelines.
+
+## 🔧 Features
+
+- ✅ Embeds user queries using `bge-small-en-v1.5`
+- ✅ Stores query-response pairs with FAISS index
+- ✅ Retrieves cached results based on semantic similarity
+- ✅ Configurable similarity threshold (default: 0.15)
+- ✅ Supports metadata (timestamps, hits) and leaderboard extensions
+- ✅ Fully functional with Mistral (via Groq) or any OpenRouter-compatible LLM
+- ✅ Unit-tested with `pytest`
+
+## 📁 Key Modules
+
+| Module | Purpose |
+|--------|---------|
+| `embedder.py` | Loads BGE model and returns query embeddings |
+| `index_manager.py` | Manages FAISS index creation, loading, saving |
+| `operations.py` | Handles get/set/clear cache operations |
+| `tests/` | Unit tests for all core functionality |
+
+## 🚀 Usage (Example)
+
+```python
+from semantic_cache.operations import get_from_cache, set_in_cache
+
+query = "top places to visit in France"
+cached = get_from_cache(query)
+
+if cached:
+    print("✅ Cache Hit:", cached)
+else:
+    response = "Paris, Lyon, Nice..."  
+    set_in_cache(query, response)
+```
+
+## Run Tests
+```python
+pytest tests/
+```
+
 
 ---
+## 🧠 Next Steps
+Integrate into full RAG pipeline with query_router.py
 
-Stay tuned for functional modules covering semantic caching, vector index management, retrieval integration, and LLM orchestration.
+Add leaderboard and TTL/size-based trimming logic
 
+Expose as API using FastAPI (optional)
