@@ -8,3 +8,4 @@ faiss-cpu
 pytest
 openai
 dotenv
+pypdf
