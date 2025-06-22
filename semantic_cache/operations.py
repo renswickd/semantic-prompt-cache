@@ -1,5 +1,3 @@
-# semantic_cache/operations.py
-
 from typing import Optional
 from datetime import datetime
 from uuid import uuid4
