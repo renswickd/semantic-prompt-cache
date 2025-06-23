@@ -3,5 +3,9 @@ sentence-transformers
 torch
 langchain-community
 langchain-huggingface
+langchain-groq
 faiss-cpu
 pytest
+openai
+dotenv
+pypdf

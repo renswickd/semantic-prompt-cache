@@ -32,18 +32,57 @@ A modular, non-OOP semantic caching system built to reduce LLM calls and latency
 - ✅ Embeds user queries using `bge-small-en-v1.5`
 - ✅ Stores query-response pairs with FAISS index
 - ✅ Retrieves cached results based on semantic similarity
-- ✅ Configurable similarity threshold (default: 0.15)
+- ✅ Configurable similarity threshold
 - ✅ Supports metadata (timestamps, hits) and leaderboard extensions
 - ✅ Fully functional with Mistral (via Groq) or any OpenRouter-compatible LLM
-- ✅ Unit-tested with `pytest`
+- ✅ Enterprise knowledge assistants (e.g. Azure Docs)
+- ✅ High-throughput RAG pipelines
+- ✅ Latency-sensitive LLM apps
+
+# 🧱 Architecture Overview
+
+```text
+            ┌──────────────────────────────┐
+            │        User Query Input       │
+            └──────────────────────────────┘
+                         │
+                         ▼
+     ┌───────────────────────────────────────┐
+     │ 1. Check Semantic Cache (FAISS)       │
+     └───────────────────────────────────────┘
+         │ Yes (high match)   │ No (miss)
+         ▼                    ▼
+  Reuse Cached LLM     ┌─────────────────────┐
+      Response         │ 2. Retrieve Context │
+                       └─────────────────────┘
+                               │
+                               ▼
+         ┌────────────────────────────────┐
+         │ 3. Build Prompt + Inject Docs  │
+         └────────────────────────────────┘
+                               │
+                               ▼
+        ┌────────────────────────────────────┐
+        │ 4. Generate Response (Mistral LLM) │
+        └────────────────────────────────────┘
+                               │
+                               ▼
+        ┌────────────────────────────────────┐
+        │ 5. Postprocess + Store in Cache    │
+        └────────────────────────────────────┘
+```
 
 ## 📁 Key Modules
 
 | Module | Purpose |
 |--------|---------|
-| `embedder.py` | Loads BGE model and returns query embeddings |
-| `index_manager.py` | Manages FAISS index creation, loading, saving |
-| `operations.py` | Handles get/set/clear cache operations |
+| `semantic_cache/embedder.py` | Loads BGE model and returns query embeddings |
+| `semantic_cache/index_manager.py` | Manages FAISS index creation, loading, saving |
+| `semantic_cache/operations.py` | Handles get/set/clear cache operations |
+| `rag/retriever.py` |	Top-k document retrieval from Azure knowledge base |
+| `rag/prompt_builder.py` |	Combines retrieved chunks + user question into LLM prompt |
+| `rag/llm_client.py` |	Calls Mistral via Groq using LangChain |
+| `rag/ingest_docs.py` |	Preprocesses and uploads local docs into FAISS vectorstore |
 | `tests/` | Unit tests for all core functionality |
 
 ## 🚀 Usage (Example)
@@ -68,9 +107,14 @@ pytest tests/
 
 
 ---
-## 🧠 Next Steps
-Integrate into full RAG pipeline with query_router.py
+## 📌 Next Steps
+🔁 Add leaderboard and TTL/size-based cache trimming
 
-Add leaderboard and TTL/size-based trimming logic
+📚 Ingest Azure PDF documentation automatically
 
-Expose as API using FastAPI (optional)
+🌐 Wrap with FastAPI for API serving
+
+☁️ Upgrade from FAISS → Qdrant/Chroma
+
+🤖 Migrate from Groq to AI Foundry (multi-LLM orchestration)
+
