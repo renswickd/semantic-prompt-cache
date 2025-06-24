@@ -13,7 +13,7 @@ from semantic_cache.embedder import embed_text
 from logger.logger import get_logger
 
 # Constants
-CACHE_THRESHOLD = 0.70 
+CACHE_THRESHOLD = 0.50
 DEFAULT_INDEX_DIR = "data/cache_store"
 DEFAULT_INDEX_NAME = "semantic_cache"
 
@@ -32,13 +32,13 @@ def get_from_cache(query: str) -> Optional[str]:
 
     try:
         result = index.similarity_search_with_score(query, k=1)
-        print(result)
+        # print(result)
         if result:
             doc, score = result[0]
             print()
-            print(doc, score)
+            # print(doc, score)
             logger.info(f"[cache] Similarity score: {score}")
-            if score <= CACHE_THRESHOLD:
+            if score >= CACHE_THRESHOLD:
                 logger.info("[cache] Cache hit")
                 return doc.metadata.get("response")
             else:
@@ -88,23 +88,8 @@ def clear_cache():
     logger.info("[cache] Cleared all cache files")
 
 if __name__ == "__main__":
-    # # Example usage
-    # sample_query = "What is the capital of France?"
-    # sample_response = "The capital of France is Paris."
 
-    # # Set a response in cache
-    # set_in_cache(sample_query, sample_response)
-
-    # # Get from cache
-    # cached_response = get_from_cache(sample_query)
-    # print(f"Cached response: {cached_response}")
-
-    # # Clear cache
-    # clear_cache()
-    # print("Cache cleared.")
-
-    # from semantic_cache.operations import get_from_cache, set_in_cache
-
+    clear_cache() # Clear cache before testing
     query = "What are the uses of Machine Learning in healthcare?"
     cached = get_from_cache(query)
     if cached:
