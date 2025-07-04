@@ -9,3 +9,4 @@ pytest
 openai
 dotenv
 pypdf
+streamlit
